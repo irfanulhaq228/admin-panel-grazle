@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useDispatch } from "react-redux";
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
-import { updatePageNavigation } from "@/features/features";
+import { updatePageLoader, updatePageNavigation } from "@/features/features";
 
 import img from "@/assets/profile.jpeg";
 import { CiLocationOn } from "react-icons/ci";
@@ -15,6 +15,7 @@ import documentSvg from "@/assets/svgs/document-svg.svg";
 const SellerVerificationId = () => {
   const dispatch = useDispatch();
   useEffect(() => {
+    dispatch(updatePageLoader(false))
     dispatch(updatePageNavigation("seller-verification"));
   }, [dispatch]);
   return (

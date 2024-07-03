@@ -15,15 +15,26 @@ import { BsThreeDots } from "react-icons/bs";
 import { IoEye } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/loading";
+import { axiosPrivate } from "@/axios";
 
 const Feedback = () => {
   const dispatch = useDispatch();
-  const [selectedTab, setSelectedTab] = useState("customer");
+  const [feedbacks, setFeedbacks] = useState([]);
+  // const [selectedTab, setSelectedTab] = useState("customer");
   const [selectedCustomer, setSelectedCustomer] = useState(0);
   useEffect(() => {
     dispatch(updatePageLoader(false));
     dispatch(updatePageNavigation("feedback"));
+    fn_getAllFeedbacks();
   }, [dispatch]);
+  const fn_getAllFeedbacks = async () => {
+    const { data } = await axiosPrivate.get("/admin/feedbacks", {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    });
+    setFeedbacks(data?.feedbacks);
+  };
   const fn_viewDetails = (id) => {
     if (id === selectedCustomer) {
       return setSelectedCustomer(0);
@@ -40,7 +51,7 @@ const Feedback = () => {
           <div className="flex-1 mt-[30px] px-[22px]">
             <SearchOnTop />
             <div className="mt-[25px] bg-white rounded-[8px] p-[10px] sm:p-[25px]">
-              <div className="flex gap-10 mb-[15px]">
+              {/* <div className="flex gap-10 mb-[15px]">
                 <p
                   className={`cursor-pointer hover:text-[var(--text-color)] font-[500] border-b-[2px] hover:border-[var(--text-color)] ${
                     selectedTab === "customer"
@@ -61,9 +72,10 @@ const Feedback = () => {
                 >
                   Seller
                 </p>
-              </div>
-              <div className="mt-[30px] flex flex-col gap-[20px]">
-                {data?.map((item) => (
+              </div> */}
+              {/* <div className="mt-[30px] flex flex-col gap-[20px]"> */}
+              <div className="flex flex-col gap-[20px]">
+                {feedbacks?.map((item) => (
                   <Lists
                     item={item}
                     key={item.id}
@@ -84,10 +96,11 @@ export default Feedback;
 
 const Lists = ({ item, fn_viewDetails, selectedCustomer }) => {
   const navigate = useRouter();
+  const dispatch = useDispatch();
   return (
     <div
       className="border border-gray-200 rounded-[8px] p-[20px] relative"
-      key={item.id}
+      key={item?.id}
     >
       <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
         <Image
@@ -95,34 +108,34 @@ const Lists = ({ item, fn_viewDetails, selectedCustomer }) => {
           src={img}
           className="h-[50px] w-[50px] rounded-full bg-[#E0D5C9]"
         />
-        <p className="text-[14px]">AvivGeffen</p>
+        <p className="text-[14px]">{item?.name}</p>
         <p className="text-[11px] text-[var(--text-color-body)] mt-[-9px] sm:mt-0 sm:ms-10">
-          8 hours ago
+          {new Date(item?.created_at).toDateString()}
         </p>
       </div>
       <p className="font-[500] mt-4 text-center sm:text-start">
-        Frustrating experience, overcomplicated tool
+        {item?.subject}
       </p>
       <p className="text-[14px] text-[var(--text-color-body)] mt-1 sm:w-[85%] text-center sm:text-start">
-        Lorem ipsum dolor sit amet consectetur. Nulla id vel senectus odio
-        tempus eu porttitor. Elementum id eu nec et lectus. Lorem ipsum dolor
-        sit amet consectetur. Nulla id vel senectus odio tempus eu porttitor.
-        Elementum id eu nec et lectus.
+        {item?.message}
       </p>
       <div className="sm:absolute sm:right-[20px] sm:top-[20px] flex items-center justify-center mt-4 sm:mt-0 gap-3">
         <button
           className="rounded-[4px] h-[30px] w-[75px] text-[12px] border border-[#00A1FF] text-[#00A1FF] hover:bg-[#00A1FF] hover:text-white"
-          onClick={() => navigate.push(`/feedback/${item.id}`)}
+          onClick={() => {
+            dispatch(updatePageLoader(true))
+            navigate.push(`/feedback/${item?.id}`)
+          }}
         >
           Open
         </button>
         <BsThreeDots
           className="text-[var(--text-color-body)] hidden sm:block cursor-pointer"
-          onClick={() => fn_viewDetails(item.id)}
+          onClick={() => fn_viewDetails(item?.id)}
         />
-        {selectedCustomer === item.id && (
+        {selectedCustomer === item?.id && (
           <div className="absolute right-[25px] top-0">
-            <ViewDetails id={item.id} />
+            <ViewDetails id={item?.id} />
           </div>
         )}
       </div>
@@ -132,10 +145,14 @@ const Lists = ({ item, fn_viewDetails, selectedCustomer }) => {
 
 const ViewDetails = ({ id }) => {
   const navigate = useRouter();
+  const dispatch = useDispatch();
   return (
     <div
       className="absolute py-[10px] px-[10px] flex flex-col items-center text-[var(--text-color-body)] bg-white rounded-[8px] shadow-md border border-gray-100 w-[max-content] left-[-145px] top-[13px] cursor-pointer"
-      onClick={() => navigate.push(`/feedback/${id}`)}
+      onClick={() => {
+        navigate.push(`/feedback/${id}`);
+        dispatch(updatePageLoader(true));
+      }}
     >
       <div className="flex items-center gap-2.5 w-full px-2 py-1.5 hover:bg-gray-100 rounded-sm">
         <IoEye className="w-[20px] h-[20px]" />

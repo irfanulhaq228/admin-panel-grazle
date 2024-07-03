@@ -9,23 +9,23 @@ import Sidebar from "@/components/sidebar";
 import { updatePageLoader, updatePageNavigation } from "@/features/features";
 
 import electronicLED from "@/assets/Electronic-LED.png";
-// import tableAction from "@/assets/svgs/table-action.svg";
+import tableAction from "@/assets/svgs/table-action.svg";
 import Image from "next/image";
 import { axiosPrivate } from "@/axios";
 import Loading from "@/components/loading";
-// import { useRouter } from "next/navigation";
-// import { IoEye } from "react-icons/io5";
+import { useRouter } from "next/navigation";
+import { IoEye } from "react-icons/io5";
 
 const Sellers = () => {
   const dispatch = useDispatch();
-  // const [sellerId, setSellerId] = useState(0);
+  const [sellerId, setSellerId] = useState(0);
   const [selectedTab, setSelectedTab] = useState("recent");
   const [allSellers, setAllSellers] = useState([]);
   const sellerRef = useRef([]);
 
   useEffect(() => {
     const getAllSellers = async () => {
-      const { data } = await axiosPrivate.get("/users", {
+      const { data } = await axiosPrivate.get("/users?role=seller", {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
@@ -59,12 +59,12 @@ const Sellers = () => {
     dispatch(updatePageNavigation("sellers"));
   }, [dispatch]);
 
-  // const fn_viewDetails = (id) => {
-  //   if (id === sellerId) {
-  //     return setSellerId(0);
-  //   }
-  //   setSellerId(id);
-  // };
+  const fn_viewDetails = (id) => {
+    if (id === sellerId) {
+      return setSellerId(0);
+    }
+    setSellerId(id);
+  };
   return (
     <>
       <Loading />
@@ -116,21 +116,19 @@ const Sellers = () => {
                     <td>Email Address</td>
                     <td>Phone Number</td>
                     <td>Status</td>
-                    {/* <td className="w-[80px]">Action</td> */}
+                    <td className="w-[80px]">Action</td>
                   </tr>
                 </thead>
                 <tbody>
                   {allSellers?.map((item) => (
                     <tr key={item.id} className="h-[50px] text-[14px]">
-                      <td className="flex items-center gap-1.5 h-[50px]">
+                      <td className="flex items-center gap-1.5 h-[50px] capitalize">
                         <Image
                           alt=""
                           src={electronicLED}
                           className="h-[26px] w-[26px]"
                         />
-                        {item?.profile?.first_name +
-                          " " +
-                          item?.profile?.last_name}
+                        {item?.username}
                       </td>
                       <td>{item?.email}</td>
                       <td>{item?.profile?.phone}</td>
@@ -146,7 +144,7 @@ const Sellers = () => {
                           {item?.active ? "Active" : "Pending"}
                         </p>
                       </td>
-                      {/* <td className="px-[17px] relative">
+                      <td className="px-[17px] relative">
                         <Image
                           alt=""
                           src={tableAction}
@@ -154,7 +152,7 @@ const Sellers = () => {
                           onClick={() => fn_viewDetails(item?.id)}
                         />
                         {sellerId === item?.id && <ViewDetails id={item.id} />}
-                      </td> */}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -169,21 +167,21 @@ const Sellers = () => {
 
 export default Sellers;
 
-// const ViewDetails = ({ id }) => {
-//   const navigate = useRouter();
-//   const dispatch = useDispatch();
-//   return (
-//     <div className="absolute py-[10px] px-[10px] flex flex-col items-center text-[var(--text-color-body)] bg-white rounded-[8px] shadow-md border border-gray-100 w-[max-content] left-[-145px] top-[13px] cursor-pointer">
-//       <div
-//         className="flex items-center gap-2.5 w-full px-2 py-1.5 hover:bg-gray-100 rounded-sm"
-//         onClick={() => {
-//           dispatch(updatePageLoader(true));
-//           navigate.push(`/sellers/${id}`);
-//         }}
-//       >
-//         <IoEye className="w-[20px] h-[20px]" />
-//         <p className="text-[14px]">View Details</p>
-//       </div>
-//     </div>
-//   );
-// };
+const ViewDetails = ({ id }) => {
+  const navigate = useRouter();
+  const dispatch = useDispatch();
+  return (
+    <div className="absolute py-[10px] px-[10px] flex flex-col items-center text-[var(--text-color-body)] bg-white rounded-[8px] shadow-md border border-gray-100 w-[max-content] left-[-145px] top-[13px] cursor-pointer">
+      <div
+        className="flex items-center gap-2.5 w-full px-2 py-1.5 hover:bg-gray-100 rounded-sm"
+        onClick={() => {
+          dispatch(updatePageLoader(true));
+          navigate.push(`/sellers/${id}`);
+        }}
+      >
+        <IoEye className="w-[20px] h-[20px]" />
+        <p className="text-[14px]">View Details</p>
+      </div>
+    </div>
+  );
+};

@@ -11,15 +11,16 @@ import {
 } from "react-icons/ri";
 import { IoBagRemoveOutline } from "react-icons/io5";
 import { FiSettings, FiShoppingBag } from "react-icons/fi";
-// import {
-//   HiOutlineExclamationCircle, HiOutlineCreditCard
-// } from "react-icons/hi2";
+import {
+  HiOutlineExclamationCircle,
+  // HiOutlineCreditCard,
+} from "react-icons/hi2";
 import {
   FaArrowAltCircleLeft,
   FaArrowAltCircleRight,
   FaUserTie,
 } from "react-icons/fa";
-// import { BsPatchCheck } from "react-icons/bs";
+import { BsPatchCheck } from "react-icons/bs";
 // import { PiRankingLight } from "react-icons/pi";
 // import { IoMdPhotos } from "react-icons/io";
 import { BiCategory } from "react-icons/bi";
@@ -91,12 +92,12 @@ const Sidebar = () => {
           navigateTo={"sellers"}
           navigate={navigate}
         />
-        {/* <SidebarPageTemplate
+        <SidebarPageTemplate
           icon={<BsPatchCheck className="w-[20px] h-[20px]" />}
           label={"Seller Verification"}
           navigateTo={"seller-verification"}
           navigate={navigate}
-        /> */}
+        />
         {/* <SidebarPageTemplate
           icon={<HiOutlineCreditCard className="w-[21px] h-[21px]" />}
           label={"Credit Limit"}
@@ -127,14 +128,14 @@ const Sidebar = () => {
           navigateTo={"settings"}
           navigate={navigate}
         />
-        {/* <SidebarPageTemplate
+        <SidebarPageTemplate
           icon={
             <HiOutlineExclamationCircle className="w-[20px] h-[20px] scale-[1.15]" />
           }
           label={`Feedback`}
           navigateTo={"feedback"}
           navigate={navigate}
-        /> */}
+        />
         <SidebarPageTemplate
           icon={<CiLogout className="w-[20px] h-[19px]" />}
           label={` Logout`}

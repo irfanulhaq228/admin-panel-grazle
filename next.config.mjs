@@ -5,9 +5,9 @@ const nextConfig = {
     // domains: [API_URL],
     domains: ["ecommerce-backend-api-production-84b3.up.railway.app"],
   },
-  swcMinify: true,
-  productionBrowserSourceMaps: false,
-  optimizeFonts: false,
+  // swcMinify: true,
+  // productionBrowserSourceMaps: false,
+  // optimizeFonts: false,
   // async rewrites() {
   //   return [
   //     {

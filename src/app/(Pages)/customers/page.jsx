@@ -7,15 +7,16 @@ import { cn } from "@/lib/utils";
 
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
+import Loading from "@/components/loading";
 import SearchOnTop from "@/components/SearchOnTop";
 import { updatePageLoader, updatePageNavigation } from "@/features/features";
 
+import electronicLED from "@/assets/Electronic-LED.png";
 import tableAction from "@/assets/svgs/table-action.svg";
 import { IoEye } from "react-icons/io5";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 
 import { axiosPrivate } from "@/axios";
-import Loading from "@/components/loading";
 
 const Customers = () => {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const Customers = () => {
   const [allCustomers, setAllCustomers] = useState([]);
   useEffect(() => {
     const getAllCustomers = async () => {
-      const { data } = await axiosPrivate.get("/users", {
+      const { data } = await axiosPrivate.get("/users?role=buyer", {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
@@ -42,6 +43,7 @@ const Customers = () => {
   //   }
   //   setSelectedCustomer(id);
   // };
+  console.log("target ==> ", allCustomers);
   return (
     <>
       <Loading />
@@ -65,21 +67,15 @@ const Customers = () => {
                 <tbody>
                   {allCustomers?.map((item) => (
                     <tr key={item.id} className="h-[50px] text-[14px]">
-                      <td className="flex items-center gap-1.5 h-[50px]">
+                      <td className="flex items-center gap-1.5 h-[50px] capitalize">
                         <Image
                           alt=""
                           width={50}
                           height={50}
-                          src={
-                            process.env.NEXT_PUBLIC_BASE_URL +
-                            "/" +
-                            item?.profile?.image
-                          }
+                          src={electronicLED}
                           className="h-[26px] w-[26px]"
                         />
-                        {item?.profile?.first_name +
-                          " " +
-                          item?.profile?.last_name}
+                        {item?.username}
                       </td>
                       <td>{item?.email}</td>
                       <td>{item?.profile?.phone}</td>
